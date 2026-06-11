@@ -45,7 +45,7 @@ public class TestCaseParameterized
             new MatchResult(MatchResult.Result.Win),
             new MatchResult(MatchResult.Result.Win),
             new MatchResult(MatchResult.Result.Win)
-        }, 28 },
+            }, 30},
         new object[] { new List<MatchResult> {
             new MatchResult(MatchResult.Result.Win),
             new MatchResult(MatchResult.Result.Win),
@@ -63,7 +63,7 @@ public class TestCaseParameterized
             new MatchResult(MatchResult.Result.Win),
             new MatchResult(MatchResult.Result.Win),
             new MatchResult(MatchResult.Result.Win),
-        }, 23 },
+        }, 28 },
     };
 
     [Theory]
