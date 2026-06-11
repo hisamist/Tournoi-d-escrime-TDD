@@ -1,6 +1,8 @@
 using FluentAssertions;
 using TournoiEscrime.Core;
 
+namespace TournoiEscrime.Tests.TestCase;
+
 public class TestCaseParameterized
 {
     [Theory]
@@ -9,24 +11,27 @@ public class TestCaseParameterized
     [Trait("Requirement", "REQ-Z-003")]
     [Trait("Requirement", "REQ-Z-004")]
     [Trait("TestCase", "TC21")]
-    [InlineData(new int[] { 3, 0, 0 }, 14)]
-    [InlineData(new int[] { 2, 1, 0 }, 7)]
-    [InlineData(new int[] { 0, 0, 3 }, 0)]
-    public void CalculateScore_VariousMatchResults_ReturnsExpectedResult(int[] matchResults, int expectedScore)
+    [InlineData(3, 0, 0, 14)]
+    [InlineData(2, 1, 0, 7)]
+    [InlineData(0, 0, 3, 0)]
+    public void CalculateScore_VariousMatchResults_ReturnsExpectedResult(int wins, int draws, int losses, int expected)
     {
         // Arrange
         var scoreCalculator = new ScoreCalculator();
+
         var matches = new List<MatchResult>();
-        foreach (var matchResult in matchResults)
-        {
-            matches.Add(new MatchResult((MatchResult.Result)matchResult));
-        }
+        for (int i = 0; i < wins; i++)
+        matches.Add(new(MatchResult.Result.Win));
+        for (int i = 0; i < draws; i++)
+        matches.Add(new(MatchResult.Result.Draw));
+        for (int i = 0; i < losses; i++)
+        matches.Add(new(MatchResult.Result.Loss));
 
         // Act
         int result = scoreCalculator.CalculateScore(matches);
 
         // Assert
-        result.Should().Be(expectedScore);
+        result.Should().Be(expected);
     }
 
     public static IEnumerable<object[]> ComplexMatchScenarios => new List<object[]>
