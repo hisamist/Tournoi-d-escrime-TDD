@@ -16,7 +16,4 @@ public class MatchResult
     {
         Outcome = outcome;
     }
-
-    // Constructeur par défaut
-    public MatchResult() { }
 }
