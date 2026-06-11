@@ -4,8 +4,8 @@
 
 | Champ | Valeur |
 |---|---|
-| Nom | Plan de test - ScoreCalculator |
-| Version | 1.1 |
+| Nom | Plan de test - ScoreCalculator + TournamentRanking |
+| Version | 1.2 |
 | Projet | Tournoi d'Escrime Fantastique |
 | Équipe | Backend |
 | Date | 2026-06-11 |
@@ -22,9 +22,10 @@
 - Disqualification
 - Pénalités
 - Gestion des cas limites et exceptions
+- `TournamentRanking.GetRanking()` / `GetChampion()` — classement et champion (bonus)
+- Classes de modèle `Player` et `TournamentRanking`
 
 **OUT OF SCOPE :**
-- `TournamentRanking.GetRanking()` / `GetChampion()` — couvert par un plan de test séparé
 - API REST, persistance en base de données, application web — phases ultérieures
 
 ---
@@ -65,6 +66,10 @@ Couverture de code cible : **≥ 95 %** sur `ScoreCalculator`.
 | R6 | Pénalités | Soustraites du score, mais le résultat final ne peut jamais être **négatif** (min = 0) |
 | R7 | Liste null | Lève une `ArgumentNullException` (paramètre `matches`) |
 | R8 | Pénalités négatives | Lève une `ArgumentException` (paramètre `penaltyPoints`) |
+| R9 | Classement | `GetRanking()` retourne les joueurs triés par score décroissant |
+| R10 | Égalités | En cas d'égalité de score, l'ordre relatif est stable (tri stable) |
+| R11 | Champion | `GetChampion()` retourne le joueur avec le score le plus élevé |
+| R12 | Tous disqualifiés | `GetChampion()` retourne `null` si tous les joueurs sont disqualifiés |
 
 ---
 
@@ -154,6 +159,45 @@ Win×6                                     → 23 ou 28 selon interprétation re
 
 ---
 
+### 7.7 Tests du système de classement (TournamentRanking)
+
+#### Modèle de données
+
+```csharp
+public class Player
+{
+    public string Name { get; set; }
+    public List<MatchResult> Matches { get; set; } = new();
+    public bool IsDisqualified { get; set; }
+    public int PenaltyPoints { get; set; }
+}
+
+public class TournamentRanking
+{
+    private readonly ScoreCalculator _scoreCalculator;
+
+    public TournamentRanking(ScoreCalculator scoreCalculator)
+    {
+        _scoreCalculator = scoreCalculator;
+    }
+
+    /// <summary>Classe les joueurs par score décroissant</summary>
+    public List<Player> GetRanking(List<Player> players) { /* TODO */ }
+
+    /// <summary>Trouve le champion (joueur avec le meilleur score)</summary>
+    public Player GetChampion(List<Player> players) { /* TODO */ }
+}
+```
+
+| ID | Titre | Entrée | Résultat attendu | Exigence(s) |
+|----|-------|--------|:---:|---|
+| TC23 | Classement par score décroissant | 3 joueurs avec scores 9, 4, 1 | Liste ordonnée [9, 4, 1] | REQ-009 |
+| TC24 | Égalité de score — ordre stable | 2 joueurs avec score identique | Les deux apparaissent, ordre d'entrée préservé | REQ-010 |
+| TC25 | Champion avec score maximum | 3 joueurs, scores 6, 14, 3 | Joueur au score 14 retourné | REQ-011 |
+| TC26 | Tous les joueurs sont disqualifiés | 3 joueurs tous `isDisqualified=true` | `GetChampion()` retourne `null` | REQ-012 |
+
+---
+
 ## 9. Risques
 
 | ID | Risque | Stratégie de mitigation |
@@ -166,8 +210,8 @@ Win×6                                     → 23 ou 28 selon interprétation re
 
 ## 10. Critères de sortie
 
-- 100 % des cas de test (TC01–TC22) passent
-- Couverture de code ≥ 95 % sur `ScoreCalculator`
+- 100 % des cas de test (TC01–TC26) passent
+- Couverture de code ≥ 95 % sur `ScoreCalculator` et `TournamentRanking`
 - Zéro bug bloquant ou critique
 - Matrice de traçabilité (§11) entièrement couverte
 
@@ -185,6 +229,10 @@ Win×6                                     → 23 ou 28 selon interprétation re
 | REQ-006 | Disqualification met le score à 0 | TC11, TC12, TC13 | ✓ Couverte |
 | REQ-007 | Pénalités soustraites, jamais de score négatif | TC13, TC14, TC15, TC16 | ✓ Couverte |
 | REQ-008 | Entrées invalides lèvent une exception | TC18, TC19 | ✓ Couverte |
+| REQ-009 | Classement par score décroissant | TC23 | ✓ Couverte |
+| REQ-010 | Égalités — tri stable | TC24 | ✓ Couverte |
+| REQ-011 | Champion = joueur au score maximum | TC25 | ✓ Couverte |
+| REQ-012 | Tous disqualifiés → champion null | TC26 | ✓ Couverte |
 
 ---
 
@@ -243,6 +291,12 @@ dotnet test --filter "Requirement=REQ-001"
 
 ---
 
-## 15. Hors-périmètre (bonus, si temps disponible)
+## 15. Bonus implémenté — TournamentRanking
 
-- `TournamentRanking.GetRanking()` / `GetChampion()` : classement par score décroissant, gestion des égalités, champion, joueurs disqualifiés — à traiter dans un plan de test séparé.
+Le système de classement a été intégré au périmètre (voir §2). Les cas TC23–TC26 couvrent :
+- Classement correct par score décroissant
+- Gestion des égalités (même score)
+- Champion avec score maximum
+- Cas où tous les joueurs sont disqualifiés
+
+Les classes `Player` et `TournamentRanking` doivent être ajoutées dans `TournoiEscrime.Core`.
