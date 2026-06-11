@@ -83,7 +83,8 @@ public class TestCaseTournamentRanking
         var champion = _ranking.GetChampion(players);
 
         // Assert
-        champion.Name.Should().Be("Frank"); // 14 points, champion
+        champion.Should().NotBeNull();
+        champion!.Name.Should().Be("Frank"); // 14 points, champion
     }
 
     [Fact]

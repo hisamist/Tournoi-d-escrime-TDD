@@ -18,10 +18,12 @@ public class TournamentRanking
     }
 
     /// <summary>Classe les joueurs par score décroissant</summary>
-    public List<Player> GetRanking(List<Player> players){
+    public List<Player> GetRanking(List<Player> players)
+    {
         var players_rankeds = new List<(Player player, int score)>();
 
-        foreach (var player in players)        {
+        foreach (var player in players)
+        {
             if (player.IsDisqualified)
             {
                 continue;
