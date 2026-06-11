@@ -72,4 +72,31 @@ public class TestCasePenalty
         // Assert
         score.Should().Be(0, "7 points - 7 penalty points = 0 (REQ-007)");
     }
+
+    [Fact]
+    [Trait("TestCase", "TC27")]
+    [Trait("Requirement", "REQ-007")]
+    public void CalculateScore_Player_Should_Subtract_PenaltyPoints_From_Score()
+    {
+        // Arrange
+        IScoreCalculator calculator = _calculator;
+        var player = new Player
+        {
+            Name = "Zoe",
+            Matches = new List<MatchResult>
+            {
+                new(MatchResult.Result.Win),
+                new(MatchResult.Result.Win),
+                new(MatchResult.Result.Draw),
+                new(MatchResult.Result.Win)
+            },
+            PenaltyPoints = 3
+        };
+
+        // Act
+        var score = calculator.CalculateScore(player);
+
+        // Assert
+        score.Should().Be(7, "10 base points - 3 penalty points = 7 (REQ-007)");
+    }
 }
