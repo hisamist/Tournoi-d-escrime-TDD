@@ -52,7 +52,8 @@ public class TestCaseBorderlineAndExceptions
         var matches = new List<MatchResult> { new(MatchResult.Result.Win) };
 
         // Act
-        Action act = () => _calculator.CalculateScore(matches, penaltyPoints: -5);
+        Action act = () =>
+        _calculator.CalculateScore(matches, penaltyPoints: -5);
 
         // Assert
         act.Should().Throw<ArgumentException>()

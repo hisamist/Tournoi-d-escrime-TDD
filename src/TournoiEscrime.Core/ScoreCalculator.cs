@@ -14,7 +14,8 @@ public class ScoreCalculator
     {
         if (matches == null)
         {
-            throw new ArgumentNullException(nameof(matches), "Matches result cannot be null");
+            throw
+            new ArgumentNullException(nameof(matches), "Matches result cannot be null");
         }
 
         if (isDisqualified)
