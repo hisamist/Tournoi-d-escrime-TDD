@@ -15,6 +15,8 @@ public class TestCaseBorderlineAndExceptions
     [Fact]
     [Trait("TestCase", "TC17")]
     [Trait("Requirement", "REQ-001")]
+    [Trait("Requirement", "REQ-002")]
+    [Trait("Requirement", "REQ-003")]
     public void Should_Return_Zero_When_Match_List_Is_Empty()
     {
         // Arrange
@@ -61,6 +63,9 @@ public class TestCaseBorderlineAndExceptions
     [Fact]
     [Trait("TestCase", "TC20")]
     [Trait("Requirement", "REQ-001")]
+    [Trait("Requirement", "REQ-002")]
+    [Trait("Requirement", "REQ-003")]
+    [Trait("Requirement", "REQ-004")]
     [Trait("Requirement", "REQ-005")]
     public void Should_Calculate_Score_For_Long_Tournament_With_Repeating_Pattern()
     {
