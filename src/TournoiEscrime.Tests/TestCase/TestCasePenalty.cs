@@ -13,6 +13,7 @@ public class TestCasePenalty
     }
 
     [Fact]
+    [Trait("TestCase", "TC14")]
     [Trait("Requirement", "REQ-007")]
     public void Should_Subtract_Penalty_From_Score()
     {
@@ -33,6 +34,7 @@ public class TestCasePenalty
     }
 
     [Fact]
+    [Trait("TestCase", "TC15")]
     [Trait("Requirement", "REQ-007")]
     public void Should_Return_Zero_When_Penalty_Exceeds_Score()
     {
@@ -52,6 +54,7 @@ public class TestCasePenalty
     }
 
     [Fact]
+    [Trait("TestCase", "TC16")]
     [Trait("Requirement", "REQ-007")]
     public void Should_Return_Zero_When_Penalty_Equals_Score()
     {

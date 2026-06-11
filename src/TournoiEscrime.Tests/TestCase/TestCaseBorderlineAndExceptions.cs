@@ -13,6 +13,7 @@ public class TestCaseBorderlineAndExceptions
     }
 
     [Fact]
+    [Trait("TestCase", "TC17")]
     [Trait("Requirement", "REQ-001")]
     public void Should_Return_Zero_When_Match_List_Is_Empty()
     {
@@ -27,6 +28,7 @@ public class TestCaseBorderlineAndExceptions
     }
 
     [Fact]
+    [Trait("TestCase", "TC18")]
     [Trait("Requirement", "REQ-008")]
     public void Should_Throw_ArgumentNullException_When_Matches_Is_Null()
     {
@@ -40,6 +42,7 @@ public class TestCaseBorderlineAndExceptions
     }
 
     [Fact]
+    [Trait("TestCase", "TC19")]
     [Trait("Requirement", "REQ-008")]
     public void Should_Throw_ArgumentException_When_Penalty_Is_Negative()
     {
@@ -56,6 +59,7 @@ public class TestCaseBorderlineAndExceptions
     }
 
     [Fact]
+    [Trait("TestCase", "TC20")]
     [Trait("Requirement", "REQ-001")]
     [Trait("Requirement", "REQ-005")]
     public void Should_Calculate_Score_For_Long_Tournament_With_Repeating_Pattern()
