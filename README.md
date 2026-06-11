@@ -37,7 +37,7 @@ Depuis la racine du repo:
 
 ```bash
 # Ajouter le collecteur de couverture au projet de tests
-dotnet add .\src\TournoiEscrime.Tests\TournoiEscrime.Tests.csproj package coverlet.collector                       
+dotnet add src/TournoiEscrime.Tests/TournoiEscrime.Tests.csproj package coverlet.collector                       
 
 # Executer les tests avec collecte de couverture
 dotnet test --collect:"XPlat Code Coverage"
