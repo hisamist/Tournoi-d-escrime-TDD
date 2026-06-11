@@ -1,15 +1,22 @@
 using FluentAssertions;
+using Moq;
 using TournoiEscrime.Core;
+using Xunit;
 
 namespace TournoiEscrime.Tests.TestCase;
 
 public class TestCaseTournamentRanking
 {
     private readonly TournamentRanking _ranking;
+    private readonly Mock<IScoreCalculator> _mockCalculator;
 
     public TestCaseTournamentRanking()
     {
-        _ranking = new TournamentRanking(new ScoreCalculator());
+        // 1. On crée le Mock de la dépendance
+        _mockCalculator = new Mock<IScoreCalculator>();
+
+        // 2. On l'injecte dans la classe à tester
+        _ranking = new TournamentRanking(_mockCalculator.Object);
     }
 
     [Fact]
@@ -18,26 +25,25 @@ public class TestCaseTournamentRanking
     public void GetRanking_Should_Return_Players_Sorted_By_Score_Desc()
     {
         // Arrange
-        var players = new List<Player>
-        {
-            new Player { Name = "Alice", Matches = new List<MatchResult> {
-                new(MatchResult.Result.Win),
-                new(MatchResult.Result.Loss),
-                new(MatchResult.Result.Win),
-                new(MatchResult.Result.Win),
-                } }, // 9 points
-            new Player { Name = "Bob", Matches = new List<MatchResult> { new(MatchResult.Result.Win), new(MatchResult.Result.Draw) } }, // 4 points
-            new Player { Name = "Charlie", Matches = new List<MatchResult> { new(MatchResult.Result.Draw) } }, // 1 point
-        };
+        var alice = new Player { Name = "Alice" };
+        var bob = new Player { Name = "Bob" };
+        var charlie = new Player { Name = "Charlie" };
+
+        // 🎯 On simule (Setup) les scores directement, plus besoin de remplir la liste Matches !
+        _mockCalculator.Setup(c => c.CalculateScore(alice)).Returns(9);
+        _mockCalculator.Setup(c => c.CalculateScore(bob)).Returns(4);
+        _mockCalculator.Setup(c => c.CalculateScore(charlie)).Returns(1);
+
+        var players = new List<Player> { bob, charlie, alice }; // Mélangés au départ
 
         // Act
         var rankedPlayers = _ranking.GetRanking(players);
 
         // Assert
         rankedPlayers.Should().HaveCount(3);
-        rankedPlayers[0].Name.Should().Be("Alice"); // 9 points
-        rankedPlayers[1].Name.Should().Be("Bob"); // 4 points
-        rankedPlayers[2].Name.Should().Be("Charlie"); // 1 point
+        rankedPlayers[0].Name.Should().Be("Alice");   // 9 pts
+        rankedPlayers[1].Name.Should().Be("Bob");     // 4 pts
+        rankedPlayers[2].Name.Should().Be("Charlie"); // 1 pt
     }
 
     [Fact]
@@ -46,19 +52,21 @@ public class TestCaseTournamentRanking
     public void GetRanking_Should_Preserve_Input_Order_For_Tied_Scores()
     {
         // Arrange
-        var players = new List<Player>
-        {
-            new Player { Name = "Bob", Matches = new List<MatchResult> { new(MatchResult.Result.Win), new(MatchResult.Result.Draw) } }, // 4 points
-            new Player { Name = "Dave", Matches = new List<MatchResult> { new(MatchResult.Result.Win), new(MatchResult.Result.Draw) } } // 4 points
-        };
+        var bob = new Player { Name = "Bob" };
+        var dave = new Player { Name = "Dave" };
+
+        _mockCalculator.Setup(c => c.CalculateScore(bob)).Returns(4);
+        _mockCalculator.Setup(c => c.CalculateScore(dave)).Returns(4);
+
+        var players = new List<Player> { bob, dave };
 
         // Act
         var rankedPlayers = _ranking.GetRanking(players);
 
         // Assert
         rankedPlayers.Should().HaveCount(2);
-        rankedPlayers[0].Name.Should().Be("Bob"); // 4 points
-        rankedPlayers[1].Name.Should().Be("Dave"); // 4 points, but after Bob in input list
+        rankedPlayers[0].Name.Should().Be("Bob");
+        rankedPlayers[1].Name.Should().Be("Dave");
     }
 
     [Fact]
@@ -67,24 +75,22 @@ public class TestCaseTournamentRanking
     public void GetRanking_Should_Return_Player_With_Highest_Score_As_Champion()
     {
         // Arrange
-        var players = new List<Player>
-        {
-            new Player { Name = "Eve", Matches = new List<MatchResult> { new(MatchResult.Result.Win), new(MatchResult.Result.Loss) } }, // 6 points
-            new Player { Name = "Frank", Matches = new List<MatchResult> {
-                new(MatchResult.Result.Win),
-                new(MatchResult.Result.Win),
-                new(MatchResult.Result.Win),
-                new(MatchResult.Result.Draw)
-                } }, // 14 points
-            new Player { Name = "Grace", Matches = new List<MatchResult> { new(MatchResult.Result.Draw) } } // 3 points
-        };
+        var eve = new Player { Name = "Eve" };
+        var frank = new Player { Name = "Frank" };
+        var grace = new Player { Name = "Grace" };
+
+        _mockCalculator.Setup(c => c.CalculateScore(eve)).Returns(6);
+        _mockCalculator.Setup(c => c.CalculateScore(frank)).Returns(14);
+        _mockCalculator.Setup(c => c.CalculateScore(grace)).Returns(3);
+
+        var players = new List<Player> { eve, frank, grace };
 
         // Act
         var champion = _ranking.GetChampion(players);
 
         // Assert
         champion.Should().NotBeNull();
-        champion!.Name.Should().Be("Frank"); // 14 points, champion
+        champion!.Name.Should().Be("Frank");
     }
 
     [Fact]
@@ -93,17 +99,19 @@ public class TestCaseTournamentRanking
     public void GetChampion_Should_Return_Null_If_All_Players_Disqualified()
     {
         // Arrange
-        var players = new List<Player>
-        {
-            new Player { Name = "Heidi", IsDisqualified = true },
-            new Player { Name = "Ivan", IsDisqualified = true },
-            new Player { Name = "Judy", IsDisqualified = true }
-        };
+        var heidi = new Player { Name = "Heidi", IsDisqualified = true };
+        var ivan = new Player { Name = "Ivan", IsDisqualified = true };
+
+        // Même s'ils ont des scores, ils sont disqualifiés
+        _mockCalculator.Setup(c => c.CalculateScore(heidi)).Returns(20);
+        _mockCalculator.Setup(c => c.CalculateScore(ivan)).Returns(15);
+
+        var players = new List<Player> { heidi, ivan };
 
         // Act
         var champion = _ranking.GetChampion(players);
 
         // Assert
-        champion.Should().BeNull(); // All players disqualified
+        champion.Should().BeNull();
     }
 }
