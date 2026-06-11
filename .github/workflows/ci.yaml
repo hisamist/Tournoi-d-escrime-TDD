@@ -22,6 +22,14 @@ jobs:
       - name: Restaurer les dépendances
         run: dotnet restore
 
+      #  Vérification du formatage du code
+      - name: Vérifier le formatage du code (Format)
+        run: dotnet format --no-restore --verify-no-changes
+
+      # Analyse statique de la qualité du code (Lint via l'éditeur .NET)
+      - name: Analyser la qualité du code (Lint / Roslyn Analyzers)
+        run: dotnet build --no-restore /p:TreatWarningsAsErrors=true /p:AnalysisLevel=latest
+
       - name: Compiler le projet
         run: dotnet build --no-restore --configuration Release
 
