@@ -1,5 +1,4 @@
-
-
+using FluentAssertions;
 using TournoiEscrime.Core;
 
 public class TestCaseParameterized
@@ -27,7 +26,7 @@ public class TestCaseParameterized
         int result = scoreCalculator.CalculateScore(matches);
 
         // Assert
-        Assert.Equal(expectedScore, result);
+        result.Should().Be(expectedScore);
     }
 
     public static IEnumerable<object[]> ComplexMatchScenarios => new List<object[]>
@@ -76,6 +75,6 @@ public class TestCaseParameterized
         int result = scoreCalculator.CalculateScore(matches);
 
         // Assert
-        Assert.Equal(expectedScore, result);
+        result.Should().Be(expectedScore);
     }
 }

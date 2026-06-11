@@ -1,3 +1,4 @@
+using FluentAssertions;
 using TournoiEscrime.Core;
 
 public class TestCaseBase
@@ -22,7 +23,7 @@ public class TestCaseBase
         int result = scoreCalculator.CalculateScore(matches);
 
         // Assert
-        Assert.Equal(4, result);
+        result.Should().Be(4);
     }
 
     [Fact]
@@ -43,7 +44,7 @@ public class TestCaseBase
         int result = scoreCalculator.CalculateScore(matches);
 
         // Assert
-        Assert.Equal(3, result);
+        result.Should().Be(3);
     }
 
     [Fact]
@@ -63,7 +64,7 @@ public class TestCaseBase
         int result = scoreCalculator.CalculateScore(matches);
 
         // Assert
-        Assert.Equal(0, result);
+        result.Should().Be(0);
     }
 
     [Fact]
@@ -83,6 +84,6 @@ public class TestCaseBase
         int result = scoreCalculator.CalculateScore(matches);
 
         // Assert
-        Assert.Equal(6, result);
+        result.Should().Be(6);
     }
 }

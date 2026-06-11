@@ -1,5 +1,4 @@
-
-
+using FluentAssertions;
 using TournoiEscrime.Core;
 
 public class TestCaseDisqualification
@@ -22,7 +21,7 @@ public class TestCaseDisqualification
         int result = scoreCalculator.CalculateScore(matches, isDisqualified: true);
 
         // Assert
-        Assert.Equal(0, result);
+        result.Should().Be(0);
     }
 
     [Fact]
@@ -38,7 +37,7 @@ public class TestCaseDisqualification
         int result = scoreCalculator.CalculateScore(matches, isDisqualified: true);
 
         // Assert
-        Assert.Equal(0, result);
+        result.Should().Be(0);
     }
 
     [Fact]
@@ -60,6 +59,6 @@ public class TestCaseDisqualification
         int result = scoreCalculator.CalculateScore(matches, isDisqualified: true, penaltyPoints: 5);
 
         // Assert
-        Assert.Equal(0, result);
+        result.Should().Be(0);
     }
 }
