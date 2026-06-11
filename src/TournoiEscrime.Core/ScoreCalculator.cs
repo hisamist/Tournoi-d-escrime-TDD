@@ -1,7 +1,13 @@
 ﻿namespace TournoiEscrime.Core;
 
-public class ScoreCalculator
+public class ScoreCalculator : IScoreCalculator
 {
+    /// <summary>Calcule le score final d'un joueur</summary>
+    int IScoreCalculator.CalculateScore(Player player)
+    {
+        return CalculateScore(player.Matches, player.IsDisqualified, player.PenaltyPoints);
+    }
+
     /// <summary>
     /// Calcule le score final d'un joueur selon les règles du tournoi
     /// </summary>

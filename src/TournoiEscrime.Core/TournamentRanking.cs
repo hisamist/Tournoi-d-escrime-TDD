@@ -10,9 +10,9 @@ public class Player
 
 public class TournamentRanking
 {
-    private readonly ScoreCalculator _scoreCalculator;
+    private readonly IScoreCalculator _scoreCalculator;
 
-    public TournamentRanking(ScoreCalculator scoreCalculator)
+    public TournamentRanking(IScoreCalculator scoreCalculator)
     {
         _scoreCalculator = scoreCalculator;
     }
@@ -28,7 +28,7 @@ public class TournamentRanking
             {
                 continue;
             }
-            var score = _scoreCalculator.CalculateScore(player.Matches, player.IsDisqualified, player.PenaltyPoints);
+            var score = _scoreCalculator.CalculateScore(player);
             players_rankeds.Add((player, score));
         }
 
