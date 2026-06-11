@@ -27,7 +27,7 @@ public class ScoreCalculator
             throw new ArgumentException("Penalty points cannot be negative", nameof(penaltyPoints));
         }
 
-        var points 
+        var points
         = 0;
         var consecutiveWins = 0;
 
