@@ -1,6 +1,8 @@
 using FluentAssertions;
 using TournoiEscrime.Core;
 
+namespace TournoiEscrime.Tests.TestCase;
+
 public class TestCaseDisqualification
 {
     [Fact]
