@@ -21,11 +21,11 @@ public class TestCaseParameterized
 
         var matches = new List<MatchResult>();
         for (int i = 0; i < wins; i++)
-        matches.Add(new(MatchResult.Result.Win));
+            matches.Add(new(MatchResult.Result.Win));
         for (int i = 0; i < draws; i++)
-        matches.Add(new(MatchResult.Result.Draw));
+            matches.Add(new(MatchResult.Result.Draw));
         for (int i = 0; i < losses; i++)
-        matches.Add(new(MatchResult.Result.Loss));
+            matches.Add(new(MatchResult.Result.Loss));
 
         // Act
         int result = scoreCalculator.CalculateScore(matches);
